@@ -1,18 +1,9 @@
-import {
-  Resolver,
-  Query,
-  Args,
-  Mutation,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { StoreType } from './models/store.model';
 import { StoreService } from './store.service';
 import { ProductService } from 'src/product/product.service';
 import { CreateStoreInput } from './inputs/create-store.input';
 import { AssignProductsToStore } from './inputs/assing-products-to-store.input';
-import { ProductType } from 'src/product/models/product.model';
-import { Store } from './entities/store.entity';
 
 @Resolver((of) => StoreType)
 export class StoreResolver {

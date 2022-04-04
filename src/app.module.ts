@@ -4,6 +4,7 @@ import { ProductModule } from './product/product.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { StoreModule } from './store/store.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,9 +22,11 @@ import { StoreModule } from './store/store.module';
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
     ProductModule,
     StoreModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
