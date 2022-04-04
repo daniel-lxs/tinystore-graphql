@@ -4,7 +4,7 @@ import { StoreType } from 'src/store/models/store.model';
 @ObjectType('Product')
 export class ProductType {
   @Field((type) => ID)
-  id: number;
+  id: string;
 
   @Field()
   name: string;

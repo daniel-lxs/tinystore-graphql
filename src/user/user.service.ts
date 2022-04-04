@@ -8,8 +8,8 @@ import { nanoid } from 'nanoid';
 import { ConfirmUserInput } from './inputs/confirm-user.input';
 import { UserErrors } from './enum/user-errors.enum';
 import { LoginInput } from './inputs/login.input';
-import Ctx from './interfaces/context.interface';
 import { JwtService } from '@nestjs/jwt';
+import { IJwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class UserService {
@@ -51,20 +51,23 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async login({ email, password }: LoginInput, ctx: Ctx): Promise<User> {
+  async login({
+    email,
+    password,
+  }: LoginInput): Promise<{ accessToken: string }> {
     const user = await this.userRepository.findOne({ email });
 
     const isPassValid = await bcrypt.compare(password, user.password);
-    if (!user || isPassValid) {
+    if (!user || !isPassValid) {
       throw new UnauthorizedException(UserErrors.INVALID_LOGIN);
     }
-
     if (!user.active) {
       throw new UnauthorizedException(UserErrors.CONFIRM_TOKEN_NOT_VALIDATED);
     }
 
-    const jwt = this.jwtService.sign({ email });
+    const payload: IJwtPayload = { sub: user.id, username: user.username };
+    const accessToken = this.jwtService.sign(payload);
 
-    return user;
+    return { accessToken };
   }
 }
